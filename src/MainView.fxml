@@ -9,12 +9,12 @@
 
 <AnchorPane prefHeight="325.0" prefWidth="316.0" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="MainView">
    <children>
-      <TextField layoutX="21.0" layoutY="64.0" prefHeight="35.0" prefWidth="35.0" text="0">
+      <TextField layoutX="21.0" layoutY="64.0" prefHeight="35.0" prefWidth="35.0" text="0" fx:id="minText">
          <font>
             <Font size="18.0" />
          </font>
       </TextField>
-      <TextField layoutX="80.0" layoutY="64.0" prefHeight="35.0" prefWidth="51.0" text="00">
+      <TextField layoutX="80.0" layoutY="64.0" prefHeight="35.0" prefWidth="51.0" text="00" fx:id="secText">
          <font>
             <Font size="18.0" />
          </font>
@@ -24,15 +24,15 @@
             <Font size="18.0" />
          </font>
       </Text>
-      <Button layoutX="158.0" layoutY="60.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="96.0" text="Start" />
-      <TextField layoutX="89.0" layoutY="171.0" prefHeight="35.0" prefWidth="60.0" text="120">
+      <Button layoutX="158.0" layoutY="60.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="96.0" text="Start" fx:id="timerButton"/>
+      <TextField layoutX="89.0" layoutY="171.0" prefHeight="35.0" prefWidth="60.0" text="120" fx:id="bpmText">
          <font>
             <Font size="18.0" />
          </font>
       </TextField>
-      <Button layoutX="119.0" layoutY="245.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="96.0" text="Start" />
+      <Button layoutX="119.0" layoutY="245.0" mnemonicParsing="false" prefHeight="54.0" prefWidth="96.0" text="Start" fx:id="metroButton" />
       <Label layoutX="105.0" layoutY="211.0" text="BPM" />
-      <TextField layoutX="185.0" layoutY="171.0" prefHeight="35.0" prefWidth="60.0" text="120">
+      <TextField layoutX="185.0" layoutY="171.0" prefHeight="35.0" prefWidth="60.0" text="0" fx:id="intervalText">
          <font>
             <Font size="18.0" />
          </font>
