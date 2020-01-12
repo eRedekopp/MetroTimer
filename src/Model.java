@@ -1,21 +1,48 @@
 import java.util.ArrayList;
 
+/**
+ * Where all the data gets stored
+ */
 public class Model {
 
+    /**
+     * The current tempo setting in BPM
+     */
     private int bpm;
 
+    /**
+     * Accent every N beats, where this = N
+     */
     private int accentInterval;
 
+    /**
+     * The frequency (pitch) of the accented tone
+     */
     private float hiFreq;
 
+    /**
+     * The frequency (pitch) of the unaccented tone
+     */
     private float loFreq;
 
+    /**
+     * The number of minutes on the timer
+     */
     private int timerMin;
 
+    /**
+     * The number of seconds on the timer
+     */
     private int timerSec;
 
+    /**
+     * The current volume setting
+     */
     private double volume;
 
+    /**
+     * All ModelListeners listening to this model
+     */
     private ArrayList<ModelListener> subscribers;
 
     public Model() {

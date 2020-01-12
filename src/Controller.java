@@ -1,3 +1,6 @@
+/**
+ * Actions to be called when something changes or gets clicked
+ */
 public class Controller {
 
     private Model model;
@@ -6,6 +9,9 @@ public class Controller {
 
     private Audio audio;
 
+    /**
+     * For the timer "start" button
+     */
     public void handleTimerClick() {
         if (!timerController.timerRunning()) {
             timerController.startTimer();
@@ -15,6 +21,9 @@ public class Controller {
         model.notifySubscribers();
     }
 
+    /**
+     * for the metronome "start" button
+     */
     public void handleMetroClick() {
         if (!audio.audioPlaying()) {
             audio.start(model.getBpm(), model.getHiFreq(), model.getLoFreq(), model.getAccentInterval());
@@ -25,6 +34,8 @@ public class Controller {
     }
 
     /**
+     * For the timer's minute textbox
+     *
      * @param newText The new text entered by the user
      * @return True if it was successfully converted to an integer and stored in the Model, else false
      */
@@ -43,6 +54,8 @@ public class Controller {
     }
 
     /**
+     * For the timer's second textbox
+     *
      * @param newText The new text entered by the user
      * @return True if it was successfully converted to an integer and stored in the Model, else false
      */
@@ -61,6 +74,8 @@ public class Controller {
     }
 
     /**
+     * For the BPM textbox
+     *
      * @param newText The new text entered by the user
      * @return True if it was successfully converted to an integer and stored in the Model, else false
      */
@@ -78,6 +93,8 @@ public class Controller {
     }
 
     /**
+     * For the interval textbox
+     *
      * @param newText The new text entered by the user
      * @return True if it was successfully converted to an integer and stored in the Model, else false
      */
@@ -94,7 +111,7 @@ public class Controller {
         }
     }
 
-    public void handleVolSliderChange(float newVol) {
+    public void handleVolSliderChange(double newVol) {
         model.setVolume(newVol);
     }
 

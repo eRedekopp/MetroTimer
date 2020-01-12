@@ -1,22 +1,49 @@
 
 import javax.sound.sampled.*;
 
+/**
+ * Controls for audio output
+ */
 public class Audio {
 
+    /**
+     * Is the metronome currently supposed to be playing?
+     */
     private volatile boolean metroPlaying;
 
+    /**
+     * The thread writing metronome data to dataLine
+     */
     private Thread metroThread;
 
+    /**
+     * The thread writing alarm data to a private SourceDataLine
+     */
     private Thread alarmThread;
 
+    /**
+     * The format to be used for audio output
+     */
     private AudioFormat audioFormat;
 
+    /**
+     * The data line to which metronome data is written
+     */
     private SourceDataLine dataLine;
 
+    /**
+     * The model from which we get volume data
+     */
     private Model model;
 
+    /**
+     * How long does a single metronome beep last?
+     */
     private static final int BEEP_MS = 100;
 
+    /**
+     * The output sample rate in Hz
+     */
     private static final int SAMPLE_RATE_HZ = 44100;
 
     public Audio() {
@@ -127,6 +154,14 @@ public class Audio {
         alarmThread.start();
     }
 
+    /**
+     * Multiply all shorts in the buffer by the given volume modifier
+     *
+     * @param originalTone The tone from which to generate the volume-adjusted buffer (this buffer is not changed).
+     *                     Must be 16-bit signed big-endian PCM data
+     * @param volume The volume multiplier from 0 to 1 inclusive
+     * @return A new byte array containing
+     */
     private static byte[] adjustVolume(byte[] originalTone, double volume) {
         byte[] out = new byte[originalTone.length];
         for (int i = 0; i < originalTone.length; i += 2) {
@@ -163,6 +198,9 @@ public class Audio {
         return samples;
     }
 
+    /**
+     * @return Is audio playing right now?
+     */
     public boolean audioPlaying() {
         return this.metroPlaying;
     }

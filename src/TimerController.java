@@ -1,6 +1,9 @@
 import java.util.Timer;
 import java.util.TimerTask;
 
+/**
+ * Controls for the timer
+ */
 public class TimerController {
 
     private Model model;

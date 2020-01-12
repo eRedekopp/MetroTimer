@@ -13,7 +13,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-
+/**
+ * Startup code for the application, and controls for the UI
+ */
 public class MainView extends Application implements ModelListener {
 
     public TextField minText;
@@ -30,6 +32,9 @@ public class MainView extends Application implements ModelListener {
     private Audio audio;
     private Controller controller;
 
+    /**
+     * Update UI after a change to the Model
+     */
     public void modelChanged() {
         // update all view elements on UI thread
         Platform.runLater(new Runnable() {
@@ -57,6 +62,9 @@ public class MainView extends Application implements ModelListener {
         });
     }
 
+    /**
+     * Setup for the application
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -103,6 +111,7 @@ public class MainView extends Application implements ModelListener {
                 controller.handleTimerClick();
             }
         });
+
         // add text input listeners
         minText.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
@@ -151,7 +160,7 @@ public class MainView extends Application implements ModelListener {
         volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number oldVal, Number newVal) {
-                model.setVolume((Double) newVal);
+                controller.handleVolSliderChange((Double) newVal);
             }
         });
 
@@ -161,7 +170,6 @@ public class MainView extends Application implements ModelListener {
     }
 
     public static void main(String[] args) {
-
         launch(args);
     }
 
