@@ -134,7 +134,7 @@ public class Audio {
             @Override
             public void run() {
                 // the alarm is pretty much just a really fast metronome for a short time
-                byte[] toPlay = adjustVolume(getBeep(350, 4000), model.getVolume());
+                byte[] toPlay = adjustVolume(getBeep(500, 3600), model.getVolume());
 
                 // run on its own line so it doesn't interfere with the metronome
                 SourceDataLine alarmDataLine;
@@ -146,8 +146,8 @@ public class Audio {
                     return;
                 }
                 alarmDataLine.start();
-                // write 5 beeps
-                for (int i = 0; i < 5; i++) {
+                // write 7 beeps
+                for (int i = 0; i < 7; i++) {
                     alarmDataLine.write(toPlay, 0, toPlay.length);
                 }
             }
