@@ -8,7 +8,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 
@@ -20,6 +22,8 @@ public class MainView extends Application implements ModelListener {
     public Button metroButton;
     public TextField intervalText;
     public TextField bpmText;
+    public Text volumeText;
+    public Slider volumeSlider;
 
     private TimerController timerController;
     private Model model;
@@ -47,6 +51,8 @@ public class MainView extends Application implements ModelListener {
                 // buttons
                 timerButton.setText(timerController.timerRunning() ? "Stop" : "Start");
                 metroButton.setText(audio.audioPlaying() ? "Stop" : "Start");
+                // volume text
+                volumeText.setText(String.format("%.0f%%", model.getVolume() * 100));
             }
         });
     }
@@ -65,6 +71,7 @@ public class MainView extends Application implements ModelListener {
         controller.setAudio(audio);
         controller.setModel(model);
         controller.setTimerController(timerController);
+        audio.setModel(model);
         model.addSubscriber(this);
 
         // setup the stage
@@ -80,6 +87,8 @@ public class MainView extends Application implements ModelListener {
         metroButton = (Button) root.lookup("#metroButton");
         intervalText = (TextField) root.lookup("#intervalText");
         bpmText = (TextField) root.lookup("#bpmText");
+        volumeText = (Text) root.lookup("#volumeText");
+        volumeSlider = (Slider) root.lookup("#volumeSlider");
 
         // add button listeners
         metroButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -95,54 +104,60 @@ public class MainView extends Application implements ModelListener {
             }
         });
         // add text input listeners
-        minText.textProperty().addListener(new ChangeListener<String>() {
+        minText.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
-            public void changed(ObservableValue<? extends String> observableValue,
-                                String oldValue, String newValue) {
-                // do nothing if box is empty
-                if (newValue.length() == 0) return;
-                // delete the new character if the controller couldn't parse the input
-                if (! controller.handleMinTextChanged(newValue)) {
-                    minText.setText(oldValue);
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldVal, Boolean newVal) {
+                if (!newVal) {
+                    if (! controller.handleMinTextChanged(minText.textProperty().get())) {
+                        // return to old value if couldn't parse input
+                        model.notifySubscribers();
+                    }
                 }
             }
         });
-        secText.textProperty().addListener(new ChangeListener<String>() {
+        secText.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
-            public void changed(ObservableValue<? extends String> observableValue,
-                                String oldValue, String newValue) {
-                // do nothing if box is empty
-                if (newValue.length() == 0) return;
-                // delete the new character if the controller couldn't parse the input
-                if (! controller.handleSecTextChanged(newValue)) {
-                    secText.setText(oldValue);
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldVal, Boolean newVal) {
+                if (!newVal) {
+                    if (! controller.handleSecTextChanged(secText.textProperty().get())) {
+                        // return to old value if couldn't parse input
+                        model.notifySubscribers();
+                    }
                 }
             }
         });
-        intervalText.textProperty().addListener(new ChangeListener<String>() {
+        intervalText.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
-            public void changed(ObservableValue<? extends String> observableValue,
-                                String oldValue, String newValue) {
-                // do nothing if box is empty
-                if (newValue.length() == 0) return;
-                // delete the new character if the controller couldn't parse the input
-                if (! controller.handleIntervalTextChanged(newValue)) {
-                    intervalText.setText(oldValue);
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldVal, Boolean newVal) {
+                if (!newVal) {
+                    if (! controller.handleIntervalTextChanged(intervalText.textProperty().get())) {
+                        // return to old value if couldn't parse input
+                        model.notifySubscribers();
+                    }
                 }
             }
         });
-        bpmText.textProperty().addListener(new ChangeListener<String>() {
+        bpmText.focusedProperty().addListener(new ChangeListener<Boolean>() {
             @Override
-            public void changed(ObservableValue<? extends String> observableValue,
-                                String oldValue, String newValue) {
-                // do nothing if box is empty
-                if (newValue.length() == 0) return;
-                // delete the new character if the controller couldn't parse the input
-                if (! controller.handleBpmTextChanged(newValue)) {
-                    bpmText.setText(oldValue);
+            public void changed(ObservableValue<? extends Boolean> observableValue, Boolean oldVal, Boolean newVal) {
+                if (!newVal) {
+                    if (! controller.handleBpmTextChanged(bpmText.textProperty().get())) {
+                        // return to old value if couldn't parse input
+                        model.notifySubscribers();
+                    }
                 }
             }
         });
+        volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observableValue, Number oldVal, Number newVal) {
+                model.setVolume((Double) newVal);
+            }
+        });
+
+        // get slider label to display correct value on startup
+        model.setVolume(volumeSlider.getValue());
+        model.notifySubscribers();
     }
 
     public static void main(String[] args) {

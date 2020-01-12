@@ -13,10 +13,7 @@ public class Audio {
 
     private SourceDataLine dataLine;
 
-    /**
-     * The volume modifier, 0 <= vol <= 1
-     */
-    private double vol = 0.8d;
+    private Model model;
 
     private static final int BEEP_MS = 100;
 
@@ -73,12 +70,20 @@ public class Audio {
                     }
                 dataLine.start();
                 while (metroPlaying) {
-                    byte[] toPlay;
+                    byte[] originalTone;  // the tone as returned from getBeep
+                    byte[] toPlay;        // the adjusted tone that will actually be played
                     beeps += 1;
                     if (accentInterval == 0 || beeps % accentInterval != 0) {
-                        toPlay = loBeep;
+                        originalTone = loBeep;
                     } else {
-                        toPlay = hiBeep;
+                        originalTone = hiBeep;
+                    }
+                    toPlay = new byte[originalTone.length];
+                    for (int i = 0; i < originalTone.length; i += 2) {
+                        short adjusted = (short)(((originalTone[i] & 0xFF) << 8) | (originalTone[i+1] & 0xFF));
+                        adjusted *= model.getVolume();
+                        toPlay[i] = (byte) (adjusted >> 8);
+                        toPlay[i+1] = (byte) (adjusted & 0xFF);
                     }
                     dataLine.write(toPlay, 0, toPlay.length);
                     try {
@@ -121,7 +126,8 @@ public class Audio {
     }
 
     /**
-     * Get a byte buffer containing the PCM data for a single "beep" and the silence following it.
+     * Get a byte buffer containing the PCM data for a single "beep" (at max volume) and the silence following it.
+     * Adjust the volume of this beep by scaling each by the volume modifier
      *
      * @param bpm The tempo in BPM of the metronome for which this beep is being made
      * @param freq The pitch of the beep
@@ -136,7 +142,7 @@ public class Audio {
         for (int i = 0; i < BEEP_MS * (float) 44100 / 1000; i++) {
             float period = (float) SAMPLE_RATE_HZ / freq;
             double angle = 2 * i * Math.PI / (period);
-            short a = (short) (Math.sin(angle) / (2 * Math.PI) * vol * Short.MAX_VALUE);
+            short a = (short) (Math.sin(angle) / (2 * Math.PI) * Short.MAX_VALUE);
             // write to buffer as bytes
             samples[2 * i] = (byte) (a >> 8);
             samples[2 * i + 1] = (byte) (a & 0xFF);
@@ -147,6 +153,10 @@ public class Audio {
 
     public boolean audioPlaying() {
         return this.metroPlaying;
+    }
+
+    public void setModel(Model model) {
+        this.model = model;
     }
 
 }

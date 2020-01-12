@@ -14,6 +14,8 @@ public class Model {
 
     private int timerSec;
 
+    private double volume;
+
     private ArrayList<ModelListener> subscribers;
 
     public Model() {
@@ -105,5 +107,14 @@ public class Model {
 
     public boolean timeUp() {
         return timerMin == 0 && timerSec == 0;
+    }
+
+    public double getVolume() {
+        return volume;
+    }
+
+    public void setVolume(double vol) {
+        this.volume = vol;
+        this.notifySubscribers();
     }
 }

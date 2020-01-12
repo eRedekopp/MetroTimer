@@ -8,8 +8,6 @@ anyway.
 
 ### What still needs doing?
 
-- Add a volume slider
-- Make it easier to enter numbers
 - Add the alarm for the timer
 - Make the timer loop
 - Allow the user to change "beep" tones

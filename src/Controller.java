@@ -94,6 +94,10 @@ public class Controller {
         }
     }
 
+    public void handleVolSliderChange(float newVol) {
+        model.setVolume(newVol);
+    }
+
     public void setModel(Model model) {
         this.model = model;
     }
