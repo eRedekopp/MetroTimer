@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -58,6 +59,8 @@ public class MainView extends Application implements ModelListener {
                 metroButton.setText(audio.audioPlaying() ? "Stop" : "Start");
                 // volume text
                 volumeText.setText(String.format("%.0f%%", model.getVolume() * 100));
+
+                volumeText.requestFocus();
             }
         });
     }
@@ -161,6 +164,35 @@ public class MainView extends Application implements ModelListener {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number oldVal, Number newVal) {
                 controller.handleVolSliderChange((Double) newVal);
+            }
+        });
+
+        // Add key listeners
+        primaryStage.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent keyEvent) {
+                boolean flag;
+                switch (keyEvent.getCode()) {
+                    case UP:
+                        // up arrow corresponds to increasing BPM
+                        controller.handleBpmIncr();
+                        break;
+                    case DOWN:
+                        // down arrow corresponds to decreasing BPM
+                        controller.handleBpmDecr();
+                        break;
+                    case SPACE:
+                        // space corresponds to starting/stopping the metronome
+                        controller.handleMetroClick();
+                        break;
+                    case ENTER:
+                        // enter takes the focus away from the current node
+                        volumeText.requestFocus();
+                        break;
+                    default:
+                        // do nothing for any other key
+                        break;
+                }
             }
         });
 

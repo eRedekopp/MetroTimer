@@ -10,6 +10,16 @@ public class Controller {
     private Audio audio;
 
     /**
+     * The slowest playable tempo by this metronome
+     */
+    private static final int MIN_BPM = 10;
+
+    /**
+     * The highest playable tempo by this metronome
+     */
+    private static final int MAX_BPM = 300;
+
+    /**
      * For the timer "start" button
      */
     public void handleTimerClick() {
@@ -85,7 +95,7 @@ public class Controller {
         int newBpm;
         try {
             newBpm = Integer.parseInt(newText);
-            if (newBpm < 10 || newBpm > 300)
+            if (newBpm < MIN_BPM || newBpm > MAX_BPM)
                 return false;
             model.setBpm(newBpm);
             return true;
@@ -118,6 +128,22 @@ public class Controller {
      */
     public void handleVolSliderChange(double newVol) {
         model.setVolume(newVol);
+    }
+
+    /**
+     * Increment the bpm by 1, for up arrow key
+     */
+    public void handleBpmIncr() {
+        if (model.getBpm() <= MAX_BPM)
+            model.setBpm(model.getBpm() + 1);
+    }
+
+    /**
+     * Decrement the bpm by 1, for the down arrow key
+     */
+    public void handleBpmDecr() {
+        if (model.getBpm() >= MIN_BPM)
+            model.setBpm(model.getBpm() - 1);
     }
 
     public void setModel(Model model) {

@@ -17,6 +17,5 @@ Only ones that I find useful. Feel free to submit a pull request if you've added
 
 #####Features to be added:
 
-- Adjust tempo via arrow keys
 - Tap tempo
 - Allow the user to change "beep" tones
