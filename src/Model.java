@@ -41,6 +41,22 @@ public class Model {
     private double volume;
 
     /**
+     * The last value of minutes for the timer entered by the user
+     */
+    private int lastSavedTimerMin = 0;
+
+    /**
+     * The last value of seconds for the timer entered by the user
+     */
+    private int lastSavedTimerSec = 0;
+
+    /**
+     * Should the timer loop?
+     * Always true right now, but putting this here so it's easy to add a checkbox for it later
+     */
+    private boolean timerLooping = true;
+
+    /**
      * All ModelListeners listening to this model
      */
     private ArrayList<ModelListener> subscribers;
@@ -143,5 +159,24 @@ public class Model {
     public void setVolume(double vol) {
         this.volume = vol;
         this.notifySubscribers();
+    }
+
+    public void setSavedTime(int min, int sec) {
+        this.lastSavedTimerMin = min;
+        this.lastSavedTimerSec = sec;
+    }
+
+    public void restoreSavedTime() {
+        this.timerMin = this.lastSavedTimerMin;
+        this.timerSec = this.lastSavedTimerSec;
+        this.notifySubscribers();
+    }
+
+    public boolean isTimerLooping() {
+        return timerLooping;
+    }
+
+    public void setTimerLooping(boolean timerLooping) {
+        this.timerLooping = timerLooping;
     }
 }

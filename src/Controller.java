@@ -47,6 +47,7 @@ public class Controller {
                 return false;
             }
             model.setTimerMin(newMin);
+            model.setSavedTime(newMin, model.getTimerSec());
             return true;
         } catch (NumberFormatException e) {
             return false;
@@ -67,6 +68,7 @@ public class Controller {
                 return false;
             }
             model.setTimerSec(newSec);
+            model.setSavedTime(model.getTimerMin(), newSec);
             return true;
         } catch (NumberFormatException e) {
             return false;
@@ -111,6 +113,9 @@ public class Controller {
         }
     }
 
+    /**
+     * For the volume slider
+     */
     public void handleVolSliderChange(double newVol) {
         model.setVolume(newVol);
     }

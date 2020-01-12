@@ -12,6 +12,9 @@ public class TimerController {
 
     private Timer timer;
 
+    /**
+     * Is the timer currently running?
+     */
     private volatile boolean timerRunning = false;
 
     /**
@@ -28,8 +31,11 @@ public class TimerController {
                     if (! timerRunning) {
                         stopTimer();
                     } else if (model.timeUp()) {
-                        // TODO make it loop
-                        stopTimer();
+                        if (model.isTimerLooping()) {
+                            model.restoreSavedTime();
+                        } else {
+                            stopTimer();
+                        }
                         audio.alarm();
                     } else {
                         model.decrTimer();
@@ -47,6 +53,7 @@ public class TimerController {
         this.timer.cancel();
         this.timer = null;
         this.timerRunning = false;
+        this.model.notifySubscribers();
     }
 
     public boolean timerRunning() {

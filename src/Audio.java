@@ -9,7 +9,7 @@ public class Audio {
     /**
      * Is the metronome currently supposed to be playing?
      */
-    private volatile boolean metroPlaying;
+    private volatile boolean metroPlaying = false;
 
     /**
      * The thread writing metronome data to dataLine
@@ -114,6 +114,7 @@ public class Audio {
                 dataLine.flush();
             }
         });
+        metroThread.setDaemon(true);
         metroThread.start();
     }
 
@@ -151,6 +152,7 @@ public class Audio {
                 }
             }
         });
+        alarmThread.setDaemon(true);
         alarmThread.start();
     }
 
