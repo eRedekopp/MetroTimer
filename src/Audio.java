@@ -64,35 +64,22 @@ public class Audio {
                 long beeps = 0;
                 if (! dataLine.isOpen())
                     try {
-                        dataLine.open(audioFormat, 4196);
+                        dataLine.open(audioFormat, 4096);
                     } catch (LineUnavailableException e) {
                         e.printStackTrace();
                     }
                 dataLine.start();
                 while (metroPlaying) {
-                    byte[] originalTone;  // the tone as returned from getBeep
-                    byte[] toPlay;        // the adjusted tone that will actually be played
+                    byte[] toPlay;
                     beeps += 1;
+                    // get the volume-adjusted byte buffer
                     if (accentInterval == 0 || beeps % accentInterval != 0) {
-                        originalTone = loBeep;
+                        toPlay = adjustVolume(loBeep, model.getVolume());
                     } else {
-                        originalTone = hiBeep;
+                        toPlay = adjustVolume(hiBeep, model.getVolume());
                     }
-                    toPlay = new byte[originalTone.length];
-                    for (int i = 0; i < originalTone.length; i += 2) {
-                        short adjusted = (short)(((originalTone[i] & 0xFF) << 8) | (originalTone[i+1] & 0xFF));
-                        adjusted *= model.getVolume();
-                        toPlay[i] = (byte) (adjusted >> 8);
-                        toPlay[i+1] = (byte) (adjusted & 0xFF);
-                    }
+                    // write the samples
                     dataLine.write(toPlay, 0, toPlay.length);
-                    try {
-                        Thread.sleep(100);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                        stop();
-                    }
-
                 }
 
                 // metronome paused: flush the data line then fall off the end
@@ -115,14 +102,40 @@ public class Audio {
      * Play an alarm sound without disrupting the metronome
      */
     public void alarm() {
-        // TODO
         this.alarmThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                System.out.println("!!!! Alarm !!!!");
+                // the alarm is pretty much just a really fast metronome for a short time
+                byte[] toPlay = adjustVolume(getBeep(350, 4000), model.getVolume());
+
+                // run on its own line so it doesn't interfere with the metronome
+                SourceDataLine alarmDataLine;
+                try {
+                    alarmDataLine = AudioSystem.getSourceDataLine(audioFormat);
+                    alarmDataLine.open(audioFormat, 4096);
+                } catch (LineUnavailableException e) {
+                    e.printStackTrace();
+                    return;
+                }
+                alarmDataLine.start();
+                // write 5 beeps
+                for (int i = 0; i < 5; i++) {
+                    alarmDataLine.write(toPlay, 0, toPlay.length);
+                }
             }
         });
         alarmThread.start();
+    }
+
+    private static byte[] adjustVolume(byte[] originalTone, double volume) {
+        byte[] out = new byte[originalTone.length];
+        for (int i = 0; i < originalTone.length; i += 2) {
+            short adjusted = (short)(((originalTone[i] & 0xFF) << 8) | (originalTone[i+1] & 0xFF));
+            adjusted *= volume;
+            out[i] = (byte) (adjusted >> 8);
+            out[i+1] = (byte) (adjusted & 0xFF);
+        }
+        return out;
     }
 
     /**
@@ -133,8 +146,8 @@ public class Audio {
      * @param freq The pitch of the beep
      * @return A byte buffer containing the beep and however much silence is necessary to keep the given tempo
      */
-    private byte[] getBeep(int bpm, float freq) {
-        double secsBetweenBeats = 60f / bpm;
+    private static byte[] getBeep(int bpm, float freq) {
+        double secsBetweenBeats = 60d / bpm;
         int numSamples = (int) Math.floor(SAMPLE_RATE_HZ * secsBetweenBeats) * 2;
         byte[] samples = new byte[numSamples];
 
@@ -147,7 +160,6 @@ public class Audio {
             samples[2 * i] = (byte) (a >> 8);
             samples[2 * i + 1] = (byte) (a & 0xFF);
         }
-
         return samples;
     }
 

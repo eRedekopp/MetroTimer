@@ -8,7 +8,6 @@ anyway.
 
 ### What still needs doing?
 
-- Add the alarm for the timer
 - Make the timer loop
 - Allow the user to change "beep" tones
 - Make sure the metronome is accurate
