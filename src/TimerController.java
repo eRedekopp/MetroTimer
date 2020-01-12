@@ -19,7 +19,7 @@ public class TimerController {
 
     /**
      * Start decreasing the timer by 1 every second from its current value,
-     * then stop and set off an alarm when it hits 0
+     * then stop or restart and set off an alarm when it hits 0
      */
     public void startTimer() {
         if (! model.timeUp() && timer == null) {
@@ -33,6 +33,7 @@ public class TimerController {
                     } else if (model.timeUp()) {
                         if (model.isTimerLooping()) {
                             model.restoreSavedTime();
+                            model.decrTimer();
                         } else {
                             stopTimer();
                         }
