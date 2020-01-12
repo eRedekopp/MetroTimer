@@ -9,6 +9,8 @@ public class Audio {
 
     private Thread alarmThread;
 
+    private AudioFormat audioFormat;
+
     private SourceDataLine dataLine;
 
     /**
@@ -22,7 +24,7 @@ public class Audio {
 
     public Audio() {
         try {
-            dataLine = AudioSystem.getSourceDataLine(new AudioFormat(
+            audioFormat = new AudioFormat(
                     AudioFormat.Encoding.PCM_SIGNED,
                     SAMPLE_RATE_HZ,
                     16,
@@ -30,7 +32,8 @@ public class Audio {
                     2,
                     SAMPLE_RATE_HZ,
                     true
-            ));
+            );
+            dataLine = AudioSystem.getSourceDataLine(audioFormat);
         } catch (LineUnavailableException e) {
             e.printStackTrace();
             System.exit(1);
@@ -61,18 +64,20 @@ public class Audio {
         this.metroThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                System.out.println("metronome started");
                 long beeps = 0;
+                if (! dataLine.isOpen())
+                    try {
+                        dataLine.open(audioFormat, 4196);
+                    } catch (LineUnavailableException e) {
+                        e.printStackTrace();
+                    }
                 dataLine.start();
                 while (metroPlaying) {
-                    System.out.println("Writing tone #" + beeps);
                     byte[] toPlay;
                     beeps += 1;
                     if (accentInterval == 0 || beeps % accentInterval != 0) {
-                        System.out.println("lobeep");
                         toPlay = loBeep;
                     } else {
-                        System.out.println("hibeep");
                         toPlay = hiBeep;
                     }
                     dataLine.write(toPlay, 0, toPlay.length);
@@ -97,7 +102,6 @@ public class Audio {
      * Kill the metronome thread
      */
     public void stop() {
-        System.out.println("metronome stopped");
         this.metroPlaying = false;
         this.metroThread = null;
     }
@@ -132,9 +136,10 @@ public class Audio {
         for (int i = 0; i < BEEP_MS * (float) 44100 / 1000; i++) {
             float period = (float) SAMPLE_RATE_HZ / freq;
             double angle = 2 * i * Math.PI / (period);
-            short a = (short) (Math.sin(angle) / (2 * Math.PI) * vol);
-            samples[2 * i] = (byte) (a & 0xFF);     // write lower 8bits (________WWWWWWWW) out of 16
-            samples[2 * i + 1] = (byte) (a >> 8);   // write upper 8bits (WWWWWWWW________) out of 16
+            short a = (short) (Math.sin(angle) / (2 * Math.PI) * vol * Short.MAX_VALUE);
+            // write to buffer as bytes
+            samples[2 * i] = (byte) (a >> 8);
+            samples[2 * i + 1] = (byte) (a & 0xFF);
         }
 
         return samples;

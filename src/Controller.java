@@ -7,7 +7,6 @@ public class Controller {
     private Audio audio;
 
     public void handleTimerClick() {
-        System.out.println("timer click");
         if (!timerController.timerRunning()) {
             timerController.startTimer();
         } else {
@@ -17,7 +16,6 @@ public class Controller {
     }
 
     public void handleMetroClick() {
-        System.out.println("metro click");
         if (!audio.audioPlaying()) {
             audio.start(model.getBpm(), model.getHiFreq(), model.getLoFreq(), model.getAccentInterval());
         } else {
@@ -31,7 +29,6 @@ public class Controller {
      * @return True if it was successfully converted to an integer and stored in the Model, else false
      */
     public boolean handleMinTextChanged(String newText) {
-        System.out.println("min changed");
         int newMin;
         try {
             newMin = Integer.parseInt(newText);
@@ -50,7 +47,6 @@ public class Controller {
      * @return True if it was successfully converted to an integer and stored in the Model, else false
      */
     public boolean handleSecTextChanged(String newText) {
-        System.out.println("sec changed");
         int newSec;
         try {
             newSec = Integer.parseInt(newText);
@@ -69,7 +65,6 @@ public class Controller {
      * @return True if it was successfully converted to an integer and stored in the Model, else false
      */
     public boolean handleBpmTextChanged(String newText) {
-        System.out.println("bpm changed");
         int newBpm;
         try {
             newBpm = Integer.parseInt(newText);
@@ -87,7 +82,6 @@ public class Controller {
      * @return True if it was successfully converted to an integer and stored in the Model, else false
      */
     public boolean handleIntervalTextChanged(String newText) {
-        System.out.println("interval changed");
         int newInterval;
         try {
             newInterval = Integer.parseInt(newText);

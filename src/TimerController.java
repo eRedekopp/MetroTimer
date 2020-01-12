@@ -22,7 +22,6 @@ public class TimerController {
             TimerTask task = new TimerTask() {
                 @Override
                 public void run() {
-                    System.out.println("timer task");
                     if (! timerRunning) {
                         stopTimer();
                     } else if (model.timeUp()) {

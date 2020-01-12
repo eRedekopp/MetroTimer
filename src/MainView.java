@@ -27,7 +27,6 @@ public class MainView extends Application implements ModelListener {
     private Controller controller;
 
     public void modelChanged() {
-        System.out.println("model changed");
         // update all view elements on UI thread
         Platform.runLater(new Runnable() {
             @Override
@@ -144,7 +143,6 @@ public class MainView extends Application implements ModelListener {
                 }
             }
         });
-
     }
 
     public static void main(String[] args) {
