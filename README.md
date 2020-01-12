@@ -13,6 +13,10 @@ anyway.
 - Add the alarm for the timer
 - Make the timer loop
 - Allow the user to change "beep" tones
+- Make sure the metronome is accurate
+- Make sure the timer is accurate
+- Add a picture of the UI to this Readme
+- Make an executable
 
 ### How do I download it?
 
