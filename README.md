@@ -25,7 +25,3 @@ To open it, double click the shell script from Finder, and make sure that "termi
 
 You must have Java 11 installed on your command path, and JavaFX 11 installed somewhere where you can find it. I've added the 
 compiled .class binaries to the repository to make this easier for non-programmers, so you don't have to compile yourself.
-
-### Is there an Android version?
-
-Soon. I'm working on it.
