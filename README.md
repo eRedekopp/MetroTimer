@@ -6,6 +6,10 @@ MetroTimer is a metronome and a timer. It's simple. It's lightweight. It works o
 else that can run JavaFX. It doesn't have annoying ads or a million extra features that you were never going to use 
 anyway.
 
+## What do I use it for?
+
+Personally, I use it for drum exercises which I loop for between 1 and 5 minutes per tempo depending on the exercise. This provides an easy UI for the timer and metronome rather than having to handle them separately.
+
 ### How do I download it?
 
 Unfortunately, bundling a standalone JavaFX executable was harder than I expected. If you are on Linux or Mac, I've
